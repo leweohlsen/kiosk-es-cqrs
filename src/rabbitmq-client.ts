@@ -1,4 +1,5 @@
 import amqp, { Channel, Connection } from 'amqplib';
+import { Event } from './commands';
 
 const rabbitMQUrl = 'amqp://username:password@localhost:5672';
 const queue = 'kiba';
@@ -24,11 +25,17 @@ class RabbitMQClient {
     }
   }
 
-  public async getChannel(): Promise<Channel> {
+  private async getChannel(): Promise<Channel> {
     if (!this.channel) {
       await this.connect();
     }
     return this.channel!;
+  }
+
+  public async publish(event: Event): Promise<void> {
+    const channel = await this.getChannel();
+    const message = JSON.stringify(event);
+    channel.sendToQueue(queue, Buffer.from(message));
   }
 }
 

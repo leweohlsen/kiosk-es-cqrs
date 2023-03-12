@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 
 import { AddAccountDTO } from "./types";
-import RabbitMQClient from "./rabbitmq-client";
+import messageQueue from "./rabbitmq-client";
 import { database } from "./models";
 
 // Define the create user command
@@ -23,6 +23,8 @@ interface IUserCreatedEvent {
   };
 }
 
+export type Event = IUserCreatedEvent;
+
 const queue = "kiba";
 
 class CommandHandlers {
@@ -30,8 +32,8 @@ class CommandHandlers {
     const { name, balance } = command.payload;
 
     // TODO: validate command
-    const student = await database.getAccountByName(name);
-    if (student) throw new Error(`Account with name ${name} already exists`);
+    // const student = await database.getAccountByName(name);
+    // if (student) throw new Error(`Account with name ${name} already exists`);
 
     const id = uuidv4();
     // TODO: write data to write model
@@ -47,10 +49,9 @@ class CommandHandlers {
       },
     };
 
-    // TODO: move this to rabbit module
-    const channel = await RabbitMQClient.getChannel();
-    const message = JSON.stringify(event);
-    channel.sendToQueue(queue, Buffer.from(message));
+    // Send event to RabbitMQ
+    await messageQueue.publish(event)
+
     return event;
   }
 }

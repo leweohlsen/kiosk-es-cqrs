@@ -60,14 +60,6 @@ class DatabaseImpl implements IDatabase {
     return account.toObject() as Account;
   }
 
-  async getAccountByName(name: string): Promise<Account> {
-    const account = await this.writeModel.findOne({ name });
-    if (!account) {
-      throw new Error(`Account with name ${name} not found`);
-    }
-    return account.toObject() as Account;
-  }
-
   async createAccount(account: Account): Promise<void> {
     await new this.writeModel(account).save();
   }
