@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  mondogb:
+    image: mongo
+    volumes:
+      - 'mongodb:/data/db'
+    environment:
+      MONGO_INITDB_DATABASE: kiba
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - '27017:27017'
+
+  rabbitmq:
+    image: rabbitmq:3.9.29-management-alpine
+    container_name: 'rabbitmq'
+    restart: always
+    environment:
+      - "RABBITMQ_DEFAULT_USER=username"
+      - "RABBITMQ_DEFAULT_PASS=password"
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - rabbitmq_go_net
+
+volumes:
+  mongodb:
+
+networks:
+  rabbitmq_go_net:
+    driver: bridge

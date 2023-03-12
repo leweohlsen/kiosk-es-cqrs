@@ -1,0 +1,27 @@
+{
+  "name": "kiba",
+  "version": "0.1.0",
+  "description": "ES/CQRS backend for kiba",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "author": "Lewe Ohlsen",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "fastify": "^4.14.1",
+    "mongoose": "^7.0.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "joi": "^17.8.3",
+    "nodemon": "^2.0.21",
+    "pino-pretty": "^9.4.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
